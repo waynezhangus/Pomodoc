@@ -6,7 +6,7 @@ const User = require('../models/userModel')
 
 const userCtrl = {
   // @desc    Register a new user
-  // @route   /api/users
+  // @route   POST /api/users
   // @access  Public
   registerUser: asyncHandler( async (req, res) => {
     const { name, email, password } = req.body
@@ -43,7 +43,7 @@ const userCtrl = {
   }),
   
   // @desc    Login a user
-  // @route   /api/users/login
+  // @route   POST /api/users/login
   // @access  Public
   loginUser: asyncHandler(async (req, res) => {
     const { email, password } = req.body
@@ -64,11 +64,11 @@ const userCtrl = {
   }),
 
   // @desc    Get current user
-  // @route   /api/users/me
+  // @route   GET /api/users/me
   // @access  Private
   getMe: asyncHandler(async (req, res) => {
     const user = {
-      id: req.user._id,
+      id: req.user.id,
       email: req.user.email,
       name: req.user.name,
     }
