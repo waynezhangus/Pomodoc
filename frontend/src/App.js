@@ -6,12 +6,14 @@ import {
   Route 
 } from 'react-router-dom'
 
-import { createTheme, ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
-
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Projects from './pages/Projects'
+import Pomodoro from './pages/Pomodoro'
+
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 
 // Map href (MUI) -> to (react-router)
 const LinkBehavior = forwardRef((props, ref) => {
@@ -40,7 +42,10 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Home />}>
+            <Route path='/projects' element={<Projects />} />
+            <Route path='/pomodoro' element={<Pomodoro />} />
+          </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
         </Routes>

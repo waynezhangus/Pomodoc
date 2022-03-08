@@ -26,12 +26,18 @@ export default function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null)
   const [anchorElUser, setAnchorElUser] = useState(null)
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
-  };
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
-  };
+  const handleCloseNavMenu = () => { setAnchorElNav(null) }
+  const handleCloseUserMenu = () => { setAnchorElUser(null) }
+
+  const onProjects = () => {
+    handleCloseNavMenu()
+    navigate('/projects')
+  }
+
+  const onPomodoro = () => {
+    handleCloseNavMenu()
+    navigate('/pomodoro')
+  }
 
   const onLogout = () => {
     handleCloseUserMenu()
@@ -72,10 +78,10 @@ export default function Header() {
           open={Boolean(anchorElNav)}
           onClose={handleCloseNavMenu} 
         >
-          <MenuItem onClick={handleCloseNavMenu}>
+          <MenuItem onClick={onProjects}>
             <Typography textAlign="center">Projects</Typography>
           </MenuItem>
-          <MenuItem onClick={handleCloseNavMenu}>
+          <MenuItem onClick={onPomodoro}>
             <Typography textAlign="center">Pomodoro</Typography>
           </MenuItem>
         </Menu>
@@ -96,13 +102,13 @@ export default function Header() {
       <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
         <Button
           sx={{ my: 2, color: 'white', display: 'block' }}
-          onClick={handleCloseNavMenu}
+          onClick={onProjects}
         >
           Projects
         </Button>
         <Button
           sx={{ my: 2, color: 'white', display: 'block' }}
-          onClick={handleCloseNavMenu}
+          onClick={onPomodoro}
         >
           Pomodoro
         </Button>
@@ -131,25 +137,26 @@ export default function Header() {
         onClose={handleCloseUserMenu}
       >
         {user
-          ? (
-            <>
-              <MenuItem onClick={handleCloseUserMenu}>
+          ? [
+              <MenuItem onClick={handleCloseUserMenu} key='Profile'>
                 <Typography textAlign="center">Profile</Typography>
-              </MenuItem>
-              <MenuItem onClick={onLogout}>
+              </MenuItem>,
+              <MenuItem onClick={onLogout} key='Logout'>
                 <Typography textAlign="center">Logout</Typography>
+              </MenuItem>,
+              <MenuItem onClick={handleCloseUserMenu} key='Help'>
+                <Typography textAlign="center">Help</Typography>
               </MenuItem>
-            </>
-          )
-          : (
-            <MenuItem onClick={onLogin}>
+          ]
+          : [
+            <MenuItem onClick={onLogin} key='Login'>
                 <Typography textAlign="center">Login</Typography>
+            </MenuItem>,
+            <MenuItem onClick={handleCloseUserMenu} key='Help'>
+              <Typography textAlign="center">Help</Typography>
             </MenuItem>
-          )
+          ]
         }
-        <MenuItem onClick={handleCloseUserMenu}>
-          <Typography textAlign="center">Help</Typography>
-        </MenuItem>
       </Menu>
     </Box>
   )

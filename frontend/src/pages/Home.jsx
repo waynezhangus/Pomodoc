@@ -1,5 +1,5 @@
 import Header from '../components/Header'
-// import Cards from '../components/Cards'
+import PrivateRoute from '../components/PrivateRoute'
 import Footer from '../components/Footer'
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
@@ -9,9 +9,9 @@ export default function Home() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Header/>
-        {/* <main>
-          <Cards/>
-        </main> */}
+        <main>
+          <PrivateRoute />
+        </main>
         <Footer/>
     </LocalizationProvider>
   );
