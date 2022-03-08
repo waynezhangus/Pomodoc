@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, reset } from '../features/auth/authSlice'
+import useRouteMatch from '../hooks/useRouteMatch'
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
@@ -9,10 +10,12 @@ import Typography from '@mui/material/Typography'
 
 import AppBar from '@mui/material/AppBar'
 import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
+//import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 
@@ -22,32 +25,21 @@ export default function Header() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
+  
+  const routeMatch = useRouteMatch(['/projects', '/pomodoro']);
+  const currentTab = routeMatch?.pattern?.path;
 
   const [anchorElNav, setAnchorElNav] = useState(null)
   const [anchorElUser, setAnchorElUser] = useState(null)
 
-  const handleCloseNavMenu = () => { setAnchorElNav(null) }
-  const handleCloseUserMenu = () => { setAnchorElUser(null) }
-
-  const onProjects = () => {
-    handleCloseNavMenu()
-    navigate('/projects')
-  }
-
-  const onPomodoro = () => {
-    handleCloseNavMenu()
-    navigate('/pomodoro')
-  }
-
+  const onCloseNavMenu = () => { setAnchorElNav(null) }
+  const onCloseUserMenu = () => { setAnchorElUser(null) }
+  
   const onLogout = () => {
-    handleCloseUserMenu()
+    onCloseUserMenu()
     dispatch(logout())
     dispatch(reset())
     navigate('/')
-  };
-  const onLogin = () => {
-    handleCloseUserMenu()
-    navigate('/login')
   };
 
   const xsNavMenu = (
@@ -76,12 +68,12 @@ export default function Header() {
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           keepMounted
           open={Boolean(anchorElNav)}
-          onClose={handleCloseNavMenu} 
+          onClose={onCloseNavMenu} 
         >
-          <MenuItem onClick={onProjects}>
+          <MenuItem onClick={onCloseNavMenu} component={Link} to='/projects'>
             <Typography textAlign="center">Projects</Typography>
           </MenuItem>
-          <MenuItem onClick={onPomodoro}>
+          <MenuItem onClick={onCloseNavMenu} component={Link} to='/pomodoro'>
             <Typography textAlign="center">Pomodoro</Typography>
           </MenuItem>
         </Menu>
@@ -100,18 +92,15 @@ export default function Header() {
         POMODOC
       </Typography>
       <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-        <Button
-          sx={{ my: 2, color: 'white', display: 'block' }}
-          onClick={onProjects}
+        <Tabs
+            value={currentTab ?? false}
+            indicatorColor="primary"
+            textColor="inherit"
+            variant="fullWidth"
         >
-          Projects
-        </Button>
-        <Button
-          sx={{ my: 2, color: 'white', display: 'block' }}
-          onClick={onPomodoro}
-        >
-          Pomodoro
-        </Button>
+          <Tab label='Projects' value='/projects' component={Link} to='/projects' />
+          <Tab label='Pomodoro' value='/pomodoro' component={Link} to='/pomodoro'/>
+        </Tabs>
       </Box>
     </>
   )
@@ -134,25 +123,25 @@ export default function Header() {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         keepMounted
         open={Boolean(anchorElUser)}
-        onClose={handleCloseUserMenu}
+        onClose={onCloseUserMenu}
       >
         {user
           ? [
-              <MenuItem onClick={handleCloseUserMenu} key='Profile'>
+              <MenuItem onClick={onCloseUserMenu} key='Profile'>
                 <Typography textAlign="center">Profile</Typography>
               </MenuItem>,
               <MenuItem onClick={onLogout} key='Logout'>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>,
-              <MenuItem onClick={handleCloseUserMenu} key='Help'>
+              <MenuItem onClick={onCloseUserMenu} key='Help'>
                 <Typography textAlign="center">Help</Typography>
               </MenuItem>
           ]
           : [
-            <MenuItem onClick={onLogin} key='Login'>
+            <MenuItem onClick={onCloseUserMenu} key='Login' component={Link} to='/login'>
                 <Typography textAlign="center">Login</Typography>
             </MenuItem>,
-            <MenuItem onClick={handleCloseUserMenu} key='Help'>
+            <MenuItem onClick={onCloseUserMenu} key='Help'>
               <Typography textAlign="center">Help</Typography>
             </MenuItem>
           ]
