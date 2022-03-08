@@ -5,7 +5,7 @@ const { protect } = require('../middleware/authMid')
 const router = express.Router()
 
 // Register User
-router.post('/register', userCtrl.registerUser)
+router.post('/', userCtrl.registerUser)
 // Login User
 router.post('/login', userCtrl.loginUser)
 // Get current user
