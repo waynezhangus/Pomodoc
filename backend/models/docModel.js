@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const noteSchema = mongoose.Schema(
+const docSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -11,14 +11,21 @@ const noteSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    content: {
+    note: {
       type: String,
     },
-    date: {
+    dueDate: {
       type: Date,
+      default: Date.now
     },
     pdfLink: {
       type: String,
+    },
+    pomoTotal: {
+      type: Number,
+    },
+    pomoDone: {
+      type: Number,
     },
     status: {
       type: String,
@@ -31,4 +38,4 @@ const noteSchema = mongoose.Schema(
   }
 )
 
-module.exports = mongoose.model('Note', noteSchema)
+module.exports = mongoose.model('Doc', docSchema)

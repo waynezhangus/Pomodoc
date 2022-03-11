@@ -9,8 +9,10 @@ import {
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import Projects from './pages/Projects'
+import Documents from './pages/Documents'
 import Pomodoro from './pages/Pomodoro'
+import Document from './pages/Document'
+import PrivateRoute from './components/PrivateRoute'
 
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -43,11 +45,14 @@ function App() {
       <Router>
         <Routes>
           <Route path='/' element={<Home />}>
-            <Route path='/projects' element={<Projects />} />
+            <Route path='/projects' element={<Documents />} />
             <Route path='/pomodoro' element={<Pomodoro />} />
           </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
+          {/* <Route path='/project/:projectId' element={<PrivateRoute />}>
+            <Route path='/project/:projectId' element={<Document />} />
+          </Route> */}
         </Routes>
       </Router>
     </ThemeProvider>
