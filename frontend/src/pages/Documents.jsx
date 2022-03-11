@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useGetDocsQuery } from '../features/api/apiSlice'
+import CreateDoc from '../components/CreateDoc'
+import EditDoc from '../components/EditDoc'
 import TimeAgo from '../utils/timeAgo'
 
 import Container from '@mui/material/Container';
@@ -100,6 +102,8 @@ export default function Documents() {
         {createCard}
         {content}
       </Grid>
+      <CreateDoc open={create} onClose={toggleCreate}/>
+      <EditDoc open={edit} onClose={toggleEdit}/>
     </Container>
   )
 }
