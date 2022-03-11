@@ -3,7 +3,6 @@ import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid';
 
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -12,6 +11,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import DatePicker from '@mui/lab/DatePicker';
+import LoadingButton from '@mui/lab/LoadingButton';
+
+import SaveIcon from '@mui/icons-material/Save';
 
 export default function CreateDoc({open, onClose}) {
   const initDoc = { title: '', pdfLink: '', pomoTotal: 5, dueDate: '' }
@@ -23,7 +25,7 @@ export default function CreateDoc({open, onClose}) {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>New Document</DialogTitle>
+      <DialogTitle>Edit Document</DialogTitle>
       <DialogContent>
         {/* <DialogContentText>
           Some description.
@@ -65,6 +67,7 @@ export default function CreateDoc({open, onClose}) {
               label="Pomodoro Amount"
               fullWidth
               variant="standard"
+              type="number"
             />
           </Grid>
           <Grid item xs={12} sx={{ mt: 3 }}>
@@ -79,7 +82,15 @@ export default function CreateDoc({open, onClose}) {
       </DialogContent>
       <DialogActions>
         <Box sx={{ mb: 1, mr: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button variant="contained" onClick={onClose}>Import</Button>
+          <LoadingButton
+            onClick={onClose}
+            endIcon={<SaveIcon />}
+            loading={true}
+            loadingPosition="end"
+            variant="contained"
+          >
+            Save
+          </LoadingButton>
         </Box>
       </DialogActions>
     </Dialog>

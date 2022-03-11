@@ -3,7 +3,6 @@ import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid';
 
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -12,6 +11,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import DatePicker from '@mui/lab/DatePicker';
+import LoadingButton from '@mui/lab/LoadingButton';
+
+import UploadIcon from '@mui/icons-material/Upload';
 
 export default function CreateDoc({open, onClose}) {
   const initDoc = { title: '', pdfLink: '', dueDate: '' }
@@ -67,7 +69,15 @@ export default function CreateDoc({open, onClose}) {
       </DialogContent>
       <DialogActions>
         <Box sx={{ mb: 1, mr: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button variant="contained" onClick={onClose}>Import</Button>
+          <LoadingButton
+              onClick={onClose}
+              endIcon={<UploadIcon />}
+              loading={false}
+              loadingPosition="end"
+              variant="contained"
+            >
+              Upload
+            </LoadingButton>
         </Box>
       </DialogActions>
     </Dialog>
