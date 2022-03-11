@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useEditDocMutation } from '../features/api/apiSlice'
 
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid';
@@ -15,12 +16,27 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import SaveIcon from '@mui/icons-material/Save';
 
-export default function CreateDoc({open, onClose}) {
-  const initDoc = { title: '', pdfLink: '', pomoTotal: 5, dueDate: '' }
-  const [doc, setDoc] = useState(initDoc)
+export default function EditDoc({open, onClose, editData}) {
+  const [doc, setDoc] = useState(editData)
+
+  const [editDoc, { isLoading }] = useEditDocMutation()
+
   const onInput = e => {
     const {name, value} = e.target;
     setDoc(prev => ({...prev, [name]:value}))
+  }
+
+  const canSave = doc.title && !isLoading
+
+  const onSave = async () => {
+    if (canSave) {
+      try {
+        await editDoc(doc).unwrap()
+        onClose()
+      } catch (err) {
+        console.error('Failed to edit the doc: ', err)
+      }
+    }
   }
 
   return (
@@ -62,7 +78,7 @@ export default function CreateDoc({open, onClose}) {
               margin="dense"
               id="pomoTotal"
               name="pomoTotal"
-              value={doc.pomoTotal}
+              value={doc.pomoTotal ?? 0}
               onChange={onInput}
               label="Pomodoro Amount"
               fullWidth
@@ -83,9 +99,9 @@ export default function CreateDoc({open, onClose}) {
       <DialogActions>
         <Box sx={{ mb: 1, mr: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <LoadingButton
-            onClick={onClose}
+            onClick={onSave}
             endIcon={<SaveIcon />}
-            loading={true}
+            loading={isLoading}
             loadingPosition="end"
             variant="contained"
           >

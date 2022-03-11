@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useAddDocMutation } from '../features/api/apiSlice'
 
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid';
@@ -18,9 +19,26 @@ import UploadIcon from '@mui/icons-material/Upload';
 export default function CreateDoc({open, onClose}) {
   const initDoc = { title: '', pdfLink: '', dueDate: '' }
   const [doc, setDoc] = useState(initDoc)
+
+  const [addDoc, { isLoading }] = useAddDocMutation()
+
   const onInput = e => {
     const {name, value} = e.target;
     setDoc(prev => ({...prev, [name]:value}))
+  }
+
+  const canSave = Object.values(doc).every(Boolean) && !isLoading
+
+  const onSave = async () => {
+    if (canSave) {
+      try {
+        await addDoc(doc).unwrap()
+        onClose()
+        setDoc(initDoc)
+      } catch (err) {
+        console.error('Failed to add the doc: ', err)
+      }
+    }
   }
 
   return (
@@ -70,9 +88,9 @@ export default function CreateDoc({open, onClose}) {
       <DialogActions>
         <Box sx={{ mb: 1, mr: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <LoadingButton
-              onClick={onClose}
+              onClick={onSave}
               endIcon={<UploadIcon />}
-              loading={false}
+              loading={isLoading}
               loadingPosition="end"
               variant="contained"
             >

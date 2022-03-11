@@ -31,7 +31,7 @@ export const apiSlice = createApi({
     }),
     editDoc: builder.mutation({
       query: (doc) => ({
-        url: `docs/${doc.id}`,
+        url: `docs/${doc._id}`,
         method: 'PATCH',
         body: doc,
       }),

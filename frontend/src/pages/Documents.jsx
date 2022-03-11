@@ -1,36 +1,44 @@
 import { useMemo, useState } from 'react'
 import { useGetDocsQuery } from '../features/api/apiSlice'
+import { useDeleteDocMutation } from '../features/api/apiSlice'
 import CreateDoc from '../components/CreateDoc'
 import EditDoc from '../components/EditDoc'
 import TimeAgo from '../utils/timeAgo'
 
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
 
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CircularProgress from '@mui/material/CircularProgress';
-import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button'
+import Card from '@mui/material/Card'
+import CardActionArea from '@mui/material/CardActionArea'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import CircularProgress from '@mui/material/CircularProgress'
+import IconButton from '@mui/material/IconButton'
 
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 export default function Documents() {
-  const [create, setCreate] = useState(false);
-  const [edit, setEdit] = useState(false);
+  const [create, setCreate] = useState(false)
+  const [edit, setEdit] = useState(false)
+  const [editData, setEditData] = useState('')
+
+  const [deleteDoc] = useDeleteDocMutation()
 
   const toggleCreate = () => {
-    setCreate(prev => !prev);
-  };
+    setCreate(prev => !prev)
+  }
   const toggleEdit = () => {
-    setEdit(prev => !prev);
-  };
-  
+    setEdit(prev => !prev)
+  }
+  const onEdit = (doc) => {
+    setEditData(doc)
+    toggleEdit()
+  }
+
   const createCard = (
     <Grid item xs={12} sm={6} md={4} sx={{alignItems: 'stretch'}}>
       <Card sx={{ height: '100%', display: 'flex' }} >
@@ -61,10 +69,10 @@ export default function Documents() {
             <Button sx={{ mr: 'auto' }}>
               Finish
             </Button>
-            <IconButton edge='end' onClick={toggleEdit}>
+            <IconButton edge='end' onClick={() => onEdit(doc)}>
               <EditIcon fontSize="small"/>
             </IconButton>
-            <IconButton>
+            <IconButton onClick={() => deleteDoc(doc._id)}>
               <DeleteIcon fontSize="small"/>
             </IconButton>
           </CardActions>
@@ -103,7 +111,7 @@ export default function Documents() {
         {content}
       </Grid>
       <CreateDoc open={create} onClose={toggleCreate}/>
-      <EditDoc open={edit} onClose={toggleEdit}/>
+      { edit && (<EditDoc open={edit} onClose={toggleEdit} editData={editData}/>) }
     </Container>
   )
 }
