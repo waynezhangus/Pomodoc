@@ -88,14 +88,14 @@ export default function CreateDoc({open, onClose}) {
       <DialogActions>
         <Box sx={{ mb: 1, mr: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <LoadingButton
-              onClick={onSave}
-              endIcon={<UploadIcon />}
-              loading={isLoading}
-              loadingPosition="end"
-              variant="contained"
-            >
-              Upload
-            </LoadingButton>
+            onClick={onSave}
+            endIcon={<UploadIcon />}
+            loading={isLoading}
+            loadingPosition="end"
+            variant="contained"
+          >
+            Upload
+          </LoadingButton>
         </Box>
       </DialogActions>
     </Dialog>

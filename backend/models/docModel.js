@@ -29,7 +29,7 @@ const docSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['ongoing', 'finished'],
+      enum: ['ongoing', 'done'],
       default: 'ongoing',
     },
   },
