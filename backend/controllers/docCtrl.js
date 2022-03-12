@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler')
-
+const axios = require('axios')
 const Doc = require('../models/docModel')
+
+const readingSpeed = 2
 
 // @desc    Get doc list
 // @route   GET /api/docs
@@ -13,20 +15,33 @@ const getDocs = asyncHandler( async (req, res) => {
 // @route   POST /api/docs
 // @access  Private
 const createDoc = asyncHandler( async (req, res) => {
-  const {title, dueDate, pdfLink, pomoTotal} = req.body; 
+  const {title, dueDate, pdfLink} = req.body; 
   if (!title) {
     res.status(400)
     throw new Error('Please add a title')
   }
+
+  const findingData = await axios.get('http://api.scholarcy.com/api/findings/extract', {
+      params: {url: pdfLink}
+  })
+  const referenceData = await axios.get('http://ref.scholarcy.com/api/references/extract', {
+      params: {url: pdfLink}
+  })
+  // console.log(referenceData)
+  const pageCount = findingData.data.metadata.pages
+  const pomoTotal = Math.ceil(pageCount/readingSpeed)
+  const findings = findingData.data.findings
+  const referenceLinks = referenceData.data.reference_links
 
   const doc = await Doc.create({
     user: req.user.id,
     title,
     dueDate,
     pdfLink,
+    pageCount,
     pomoTotal,
-    pomoDone: 0,
-    status: 'ongoing',
+    findings,
+    referenceLinks
   })
   res.status(201).json(doc)
 })

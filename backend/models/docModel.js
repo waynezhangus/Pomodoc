@@ -13,6 +13,7 @@ const docSchema = mongoose.Schema(
     },
     note: {
       type: String,
+      default: ''
     },
     dueDate: {
       type: Date,
@@ -21,17 +22,30 @@ const docSchema = mongoose.Schema(
     pdfLink: {
       type: String,
     },
+    pageCount:{
+      type: Number,
+    },
     pomoTotal: {
       type: Number,
     },
     pomoDone: {
       type: Number,
+      default: 0
     },
     status: {
       type: String,
       enum: ['ongoing', 'finished'],
       default: 'ongoing',
     },
+    findings: [{
+      type: String
+    }],
+    referenceLinks: [{
+        id: String,
+        entry: String,
+        scholar_url: String,
+        oa_query: String
+    }],
   },
   {
     timestamps: true,
