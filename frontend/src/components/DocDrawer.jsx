@@ -1,11 +1,12 @@
-import { Fragment } from 'react'
 import DocTree from './DocTree'
 
 import { styled } from '@mui/material/styles'
 
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
+import Link from '@mui/material/Link'
 import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -15,7 +16,6 @@ import Toolbar from '@mui/material/Toolbar'
 import BarChartIcon from '@mui/icons-material/BarChart'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import DashboardIcon from '@mui/icons-material/Dashboard'
-import LayersIcon from '@mui/icons-material/Layers'
 import PeopleIcon from '@mui/icons-material/People'
 
 const drawerWidth = 280;
@@ -46,7 +46,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
   );
 
-export default function DocDrawer ({open, toggleDrawer, onClose}) {
+export default function DocDrawer ({open, toggleDrawer, onClose, references}) {
 
   return (
     <Drawer variant="permanent" open={open}>
@@ -64,34 +64,43 @@ export default function DocDrawer ({open, toggleDrawer, onClose}) {
       </Toolbar>
       <Divider />
       <List component="nav">
-        <Fragment>
-          <ListItemButton onClick={onClose}>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Projects" />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Collaborators" />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <BarChartIcon />
-            </ListItemIcon>
-            <ListItemText primary="Reports" />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <LayersIcon />
-            </ListItemIcon>
-            <ListItemText primary="Integrations" />
-          </ListItemButton>
-        </Fragment>
-        <Divider sx={{ my: 1 }} />
-        {open && <DocTree />}
+        <ListItemButton onClick={onClose}>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText primary="Projects" />
+        </ListItemButton>
+        <ListItemButton>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Collaborators" />
+        </ListItemButton>
+        <ListItemButton>
+          <ListItemIcon>
+            <BarChartIcon />
+          </ListItemIcon>
+          <ListItemText primary="Reports" />
+        </ListItemButton>
+        {open && (
+          <>
+            <Divider sx={{ my: 1 }} />
+            <DocTree />
+            <Divider />
+            <List sx={{height: 300, maxWidth: 400, overflowY: 'auto'}} dense>
+              {references.map(reference => (
+                  <ListItem key={reference.id}>
+                    {/* <Link href={reference.oa_query} underline="hover">
+                      {reference.entry}
+                    </Link> */}
+                    <ListItemText
+                      primary={reference.entry}
+                    />
+                  </ListItem>
+                ))}
+            </List>
+          </>
+        )} 
       </List>
     </Drawer>
   );

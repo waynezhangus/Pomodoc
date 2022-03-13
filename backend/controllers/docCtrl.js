@@ -25,12 +25,12 @@ const createDoc = asyncHandler( async (req, res) => {
     { params: {url: pdfLink} }
   )
 
-
-  const title = !req.body.title && findingData.data.metadata.title
+  const title = (req.body.title ? req.body.title : (findingData.data.metadata.title ?? 'Title not found'))
+                  
   const pageCount = findingData.data.metadata.pages
   const pomoTotal = Math.max( Math.ceil( pageCount / req.user.readingSpeed ), 1)
   const findings = findingData.data.findings
-  const referenceLinks = referenceData.data.reference_links
+  const references = referenceData.data.reference_links
 
   const doc = await Doc.create({
     user: req.user.id,
@@ -40,7 +40,7 @@ const createDoc = asyncHandler( async (req, res) => {
     pageCount,
     pomoTotal,
     findings,
-    referenceLinks
+    references
   })
   res.status(201).json(doc)
 })

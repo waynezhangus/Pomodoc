@@ -49,7 +49,7 @@ const docSchema = mongoose.Schema(
     findings: [{
       type: String
     }],
-    referenceLinks: [{
+    references: [{
         id: String,
         entry: String,
         scholar_url: String,

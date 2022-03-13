@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useEditDocMutation } from '../features/api/apiSlice'
 import useInterval from "../hooks/useInterval"
+import ViewSDKClient from "../utils/ViewSDKClient"
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
@@ -98,6 +99,26 @@ export default function Document({ doc }) {
     pomo.timerRun ? 100 : null
   )
 
+  useEffect(() => {
+    const viewSDKClient = new ViewSDKClient()
+    viewSDKClient.ready().then(() => {
+      viewSDKClient.previewFile(
+        "pdf-div",
+        {
+          defaultViewMode: "FIT_WIDTH",
+          showAnnotationTools: true,
+          showLeftHandPanel: true,
+          showPageControls: true,
+          showDownloadPDF: true,
+          showPrintPDF: true,
+        },
+        `https://cors-anywhere.herokuapp.com/${doc.pdfLink}`,
+        doc.title,
+        doc._id,
+      )
+    })
+  },[])
+
   return (
     <Box sx={{ display: 'flex' }}>
       <DocAppBar 
@@ -112,6 +133,7 @@ export default function Document({ doc }) {
         open={drawer} 
         toggleDrawer={toggleDrawer}
         onClose={onClose}
+        references={doc.references}
       />
       <Box
         component="main"
@@ -127,17 +149,11 @@ export default function Document({ doc }) {
       >
         <Toolbar />
         <DocProgress pomo={pomo} />
-        <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
           <Stack direction="row" spacing={2}>     
-            <iframe
-              title="PDF"
-              src={doc.pdfLink}
-              width="70%"
-              height="700px"
-            >
-            </iframe>
+            <div id="pdf-div" />
             <TextField
-              sx={{width: 500}}
+              sx={{width: 800}}
               id="filled-textarea"
               label={doc.title}
               name="note"
@@ -145,8 +161,8 @@ export default function Document({ doc }) {
               onChange={onInput}
               placeholder="Your note"
               multiline
-              minRows={29} 
-              maxRows={29} 
+              minRows={27} 
+              maxRows={27} 
               variant="filled"
             />
           </Stack>

@@ -34,8 +34,8 @@ export default function ControlledTreeView() {
   }
 
   return (
-    <Box sx={{ height: 270, flexGrow: 1, maxWidth: 400, overflowY: 'auto', pl: 2, pt: 1, }}>
-      <Box sx={{ mb: 1 }}>
+    <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400, overflowY: 'auto', pl: 1.5, }}>
+      <Box>
         <Button onClick={handleExpandClick}>
           {expanded.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
