@@ -1,8 +1,8 @@
 const asyncHandler = require('express-async-handler')
 const axios = require('axios')
 const Doc = require('../models/docModel')
-
-const readingSpeed = 2
+const User = require('../models/userModel')
+// const readingSpeed = 2
 
 // @desc    Get doc list
 // @route   GET /api/docs
@@ -28,8 +28,9 @@ const createDoc = asyncHandler( async (req, res) => {
       params: {url: pdfLink}
   })
   // console.log(referenceData)
+  const readingSpeed = req.user.readingSpeed ? req.user.readingSpeed : 2
   const pageCount = findingData.data.metadata.pages
-  const pomoTotal = Math.ceil(pageCount/readingSpeed)
+  const pomoTotal = Math.min( Math.ceil(pageCount/readingSpeed), 1)
   const findings = findingData.data.findings
   const referenceLinks = referenceData.data.reference_links
 
@@ -72,6 +73,20 @@ const updateDoc = asyncHandler( async (req, res) => {
   if (doc.user.toString() !== req.user.id) {
     res.status(401)
     throw new Error('Not Authorized')
+  }
+
+  if (req.body.status === 'finished') {
+    const doc = await Doc.findById(req.params.id)
+    const currentSpeed = doc.pageCount / doc.pomoDone
+    const newSpeed = (req.user.readingSpeed * req.user.docDone + currentSpeed) / (req.user.docDone + 1)
+    const updateUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { 
+        readingSpeed: newSpeed,
+        docDone: req.user.docDone + 1
+      }
+    )
+
   }
 
   const updatedDoc = await Doc.findByIdAndUpdate(

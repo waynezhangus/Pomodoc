@@ -16,11 +16,13 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please add a password'],
     },
-    workSpeed: {
-      type: Number,
-    },
     docDone: {
       type: Number,
+      default: 0
+    },
+    readingSpeed: {
+      type: Number,
+      default: 0
     },
     isAdmin: {
       type: Boolean,
