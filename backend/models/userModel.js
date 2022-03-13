@@ -21,6 +21,11 @@ const userSchema = mongoose.Schema(
     },
     docDone: {
       type: Number,
+      default: 0
+    },
+    readingSpeed: {
+      type: Number,
+      default: 2
     },
     isAdmin: {
       type: Boolean,

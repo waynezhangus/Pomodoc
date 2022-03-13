@@ -2,19 +2,19 @@ import { useState } from 'react'
 import { useAddDocMutation } from '../features/api/apiSlice'
 
 import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid'
 
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
+import TextField from '@mui/material/TextField'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
 //import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import DialogTitle from '@mui/material/DialogTitle'
 
-import DatePicker from '@mui/lab/DatePicker';
-import LoadingButton from '@mui/lab/LoadingButton';
+import DatePicker from '@mui/lab/DatePicker'
+import LoadingButton from '@mui/lab/LoadingButton'
 
-import UploadIcon from '@mui/icons-material/Upload';
+import UploadIcon from '@mui/icons-material/Upload'
 
 export default function CreateDoc({open, onClose}) {
   const initDoc = { title: '', pdfLink: '', dueDate: '' }
@@ -23,11 +23,11 @@ export default function CreateDoc({open, onClose}) {
   const [addDoc, { isLoading }] = useAddDocMutation()
 
   const onInput = e => {
-    const {name, value} = e.target;
+    const {name, value} = e.target
     setDoc(prev => ({...prev, [name]:value}))
   }
 
-  const canSave = Object.values(doc).every(Boolean) && !isLoading
+  const canSave = (doc.title || doc.pdfLink) && !isLoading
 
   const onSave = async () => {
     if (canSave) {
@@ -53,7 +53,6 @@ export default function CreateDoc({open, onClose}) {
             <TextField
               autoFocus
               margin="dense"
-              required
               id="title"
               name="title"
               value={doc.title}

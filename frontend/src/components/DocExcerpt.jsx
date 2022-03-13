@@ -1,6 +1,9 @@
 import { useDeleteDocMutation, useEditDocMutation } from '../features/api/apiSlice'
-import TimeAgo from '../utils/timeAgo'
+import { useNavigate } from 'react-router-dom'
+import { parseISO } from 'date-fns'
+import TimeDiff from '../utils/time'
 
+import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
@@ -9,7 +12,7 @@ import CardActionArea from '@mui/material/CardActionArea'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import IconButton from '@mui/material/IconButton'
-
+import LinearProgress from '@mui/material/LinearProgress'
 import LoadingButton from '@mui/lab/LoadingButton'
 
 import EditIcon from '@mui/icons-material/Edit'
@@ -17,11 +20,10 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import DoneIcon from '@mui/icons-material/Done'
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow'
 
-export default function DocExcerpt({ doc, onEdit }) {
-
+export default function DocExcerpt({doc, onEdit}) {
+  const navigate = useNavigate()
   const [editDoc, { isLoading }] = useEditDocMutation()
   const [deleteDoc] = useDeleteDocMutation()
-
 
   const onDone = async (docId) => {
     try {
@@ -31,29 +33,55 @@ export default function DocExcerpt({ doc, onEdit }) {
     }
   }
 
+  let done = (doc.status==='done')
+
   return (
     <Grid item key={doc._id} xs={12} sm={6} md={4}>
-      <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-        <CardActionArea>
-          <CardContent sx={{ flexGrow: 1 }}>
-            <Typography gutterBottom variant="h5" component="h2">
+      <Card sx={{ 
+        height: '100%',
+        display: 'flex', 
+        flexDirection: 'column',
+        bgcolor: (done && 'grey.400'),
+        color: (done && 'info.contrastText'),
+      }}>
+        <CardActionArea onClick={() => navigate(`/project/${doc._id}`)}>
+          <CardContent sx={{ flexGrow: 1 }} >
+            <Typography gutterBottom variant="h5" component="h2" noWrap>
               {doc.title}
             </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ pl: 0.2 }}>
-              {TimeAgo(doc.dueDate)}
+            <Typography variant="caption" color={!done && 'text.secondary'}>
+              {TimeDiff(doc.dueDate)}
             </Typography>
+            <Box sx={{ py: 1, display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ minWidth: 35 }}>
+                <Typography variant="caption" color={!done && 'text.secondary'}>
+                  {`${doc.pomoDone}/${doc.pomoTotal}`}
+                </Typography>
+              </Box>
+              {
+                !done && (
+                  <Box sx={{ width: '100%' }}>
+                    <LinearProgress 
+                      variant="determinate"
+                      color={(parseISO(doc.dueDate) < Date.now()) ? 'error' : 'info'}
+                      value={(doc.pomoDone/doc.pomoTotal)*100} 
+                    />
+                  </Box>
+                )
+              } 
+            </Box>
           </CardContent>
         </CardActionArea>
         <CardActions>  
           <LoadingButton
             sx={{ mr: 'auto' }}
             onClick={() => onDone(doc._id)}
-            endIcon={doc.status === 'done' ? <DoneIcon/> : <DoubleArrowIcon/>}
+            endIcon={done ? <DoneIcon/> : <DoubleArrowIcon/>}
             loading={isLoading}
             loadingPosition="end"
-            disabled={doc.status === 'done'}
+            disabled={done}
           >
-            {doc.status === 'done' ? 'Done' : 'Finish'}
+            {done ? 'Done' : 'Finish'}
           </LoadingButton>
           <IconButton edge='end' onClick={() => onEdit(doc)}>
             <EditIcon fontSize="small"/>

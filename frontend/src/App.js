@@ -11,7 +11,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Documents from './pages/Documents'
 import Pomodoro from './pages/Pomodoro'
-import Document from './pages/Document'
+import DocShell from './pages/DocShell'
 import PrivateRoute from './components/PrivateRoute'
 
 import { createTheme, ThemeProvider } from '@mui/material/styles'
@@ -50,9 +50,9 @@ function App() {
           </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          {/* <Route path='/project/:projectId' element={<PrivateRoute />}>
-            <Route path='/project/:projectId' element={<Document />} />
-          </Route> */}
+          <Route path='/project/:docId' element={<PrivateRoute />}>
+            <Route path='/project/:docId' element={<DocShell />} />
+          </Route>
         </Routes>
       </Router>
     </ThemeProvider>

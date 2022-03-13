@@ -16,7 +16,10 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     getDocs: builder.query({
       query: () => '/docs',
-      providesTags: ['Doc'],
+      providesTags: (result = [], error, arg) => [
+        'Doc',
+        ...result.map(res => ({ type: 'Doc', id: res._id }))
+      ]
     }),
     addDoc: builder.mutation({
       query: (initDoc) => ({
@@ -24,10 +27,11 @@ export const apiSlice = createApi({
         method: 'POST',
         body: initDoc,
       }),
-      invalidatesTags: ['Doc'],
+      invalidatesTags: ['Doc']
     }),
     getDoc: builder.query({
       query: (docId) => `/docs/${docId}`,
+      providesTags: (result, error, arg) => [{ type: 'Doc', id: arg }]
     }),
     editDoc: builder.mutation({
       query: (doc) => ({
@@ -35,14 +39,14 @@ export const apiSlice = createApi({
         method: 'PATCH',
         body: doc,
       }),
-      invalidatesTags: ['Doc'],
+      invalidatesTags: (result, error, arg) => [{ type: 'Doc', id: arg._id }]
     }),
     deleteDoc: builder.mutation({
       query: (docId) => ({
         url: `docs/${docId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Doc'],
+      invalidatesTags: (result, error, arg) => [{ type: 'Doc', id: arg }]
     }),
   }),
 })

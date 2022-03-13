@@ -1,7 +1,8 @@
 const asyncHandler = require('express-async-handler')
+const axios = require('axios')
 
 const Doc = require('../models/docModel')
-
+const User = require('../models/userModel')
 // @desc    Get doc list
 // @route   GET /api/docs
 // @access  Private
@@ -13,20 +14,33 @@ const getDocs = asyncHandler( async (req, res) => {
 // @route   POST /api/docs
 // @access  Private
 const createDoc = asyncHandler( async (req, res) => {
-  const {title, dueDate, pdfLink, pomoTotal} = req.body; 
-  if (!title) {
-    res.status(400)
-    throw new Error('Please add a title')
-  }
+  const {dueDate, pdfLink} = req.body; 
+  
+  const findingData = await axios.get(
+    'http://api.scholarcy.com/api/findings/extract', 
+    { params: {url: pdfLink} }
+  )
+  const referenceData = await axios.get(
+    'http://ref.scholarcy.com/api/references/extract', 
+    { params: {url: pdfLink} }
+  )
+
+
+  const title = !req.body.title && findingData.data.metadata.title
+  const pageCount = findingData.data.metadata.pages
+  const pomoTotal = Math.max( Math.ceil( pageCount / req.user.readingSpeed ), 1)
+  const findings = findingData.data.findings
+  const referenceLinks = referenceData.data.reference_links
 
   const doc = await Doc.create({
     user: req.user.id,
     title,
     dueDate,
     pdfLink,
+    pageCount,
     pomoTotal,
-    pomoDone: 0,
-    status: 'ongoing',
+    findings,
+    referenceLinks
   })
   res.status(201).json(doc)
 })
@@ -49,7 +63,7 @@ const getDoc = asyncHandler( async (req, res) => {
 // @route   PATCH /api/docs/:id
 // @access  Private
 const updateDoc = asyncHandler( async (req, res) => {
-  const doc = await Doc.findById(req.params.id).select('user')
+  const doc = await Doc.findById(req.params.id)
   if (!doc) {
     res.status(404)
     throw new Error('Note not found')
@@ -58,7 +72,17 @@ const updateDoc = asyncHandler( async (req, res) => {
     res.status(401)
     throw new Error('Not Authorized')
   }
-
+  if (req.body.status === 'done') {
+    req.body.pomoTotal = doc.pomoDone
+    if (doc.pomoDone) {
+      const currentSpeed = doc.pageCount / doc.pomoDone
+      const newSpeed = (req.user.readingSpeed * req.user.docDone + currentSpeed) / (req.user.docDone + 1)
+      await User.findByIdAndUpdate(
+        req.user.id,
+        { readingSpeed: newSpeed, docDone: req.user.docDone + 1 }
+      )
+    }
+  }
   const updatedDoc = await Doc.findByIdAndUpdate(
     req.params.id,
     req.body,
