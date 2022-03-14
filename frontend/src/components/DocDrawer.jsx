@@ -89,15 +89,21 @@ export default function DocDrawer ({open, toggleDrawer, onClose, references}) {
             <Divider />
             <List sx={{height: 300, maxWidth: 400, overflowY: 'auto'}} dense>
               {references.map(reference => (
-                  <ListItem key={reference.id}>
-                    {/* <Link href={reference.oa_query} underline="hover">
-                      {reference.entry}
-                    </Link> */}
-                    <ListItemText
-                      primary={reference.entry}
-                    />
-                  </ListItem>
-                ))}
+                <ListItem key={reference.id}>
+                  <Link  
+                    href={reference.oa_query} 
+                    underline="hover" 
+                    variant="body2" 
+                    color='text.secondary'
+                    target='_blank'
+                  >
+                    {reference.entry}
+                  </Link>
+                  {/* <ListItemText
+                    primary={reference.entry}
+                  /> */}
+                </ListItem>
+              ))}
             </List>
           </>
         )} 

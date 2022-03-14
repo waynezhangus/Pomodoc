@@ -144,29 +144,27 @@ export default function Document({ doc }) {
               : theme.palette.grey[900],
           flexGrow: 1,
           height: '100vh',
-          overflow: 'auto',
+          overflow: 'auto', 
         }}
       >
         <Toolbar />
         <DocProgress pomo={pomo} />
-        <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
-          <Stack direction="row" spacing={2}>     
-            <div id="pdf-div" />
-            <TextField
-              sx={{width: 800}}
-              id="filled-textarea"
-              label={doc.title}
-              name="note"
-              value={note}
-              onChange={onInput}
-              placeholder="Your note"
-              multiline
-              minRows={27} 
-              maxRows={27} 
-              variant="filled"
-            />
-          </Stack>
-        </Container>
+        <Stack direction="row" spacing={2} sx={{ my: 2, pr: 1 }}>     
+          <div id="pdf-div" />
+          <TextField
+            sx={{width: 800}}
+            id="filled-textarea"
+            label={doc.title}
+            name="note"
+            value={note}
+            onChange={onInput}
+            placeholder="Your note"
+            multiline
+            minRows={27} 
+            maxRows={27} 
+            variant="filled"
+          />
+        </Stack>
       </Box>    
     </Box>
   );

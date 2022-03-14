@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link as RouterLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { login, reset } from '../features/auth/authSlice'
 import Footer from '../components/Footer'
@@ -118,7 +118,7 @@ export default function Login() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href='/register' variant="body2">
+              <Link component={RouterLink} to='/register' variant="body2">
                 Don't have an account? Sign Up
               </Link>
             </Grid>

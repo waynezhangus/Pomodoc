@@ -49,12 +49,12 @@ export default function DocExcerpt({doc, onEdit}) {
             <Typography gutterBottom variant="h5" component="h2" noWrap>
               {doc.title}
             </Typography>
-            <Typography variant="caption" color={!done && 'text.secondary'}>
+            <Typography variant="caption" color={done ? 'text.disabled' : 'text.secondary'}>
               {TimeDiff(doc.dueDate)}
             </Typography>
             <Box sx={{ py: 1, display: 'flex', alignItems: 'center' }}>
               <Box sx={{ minWidth: 35 }}>
-                <Typography variant="caption" color={!done && 'text.secondary'}>
+                <Typography variant="caption" color={done ? 'text.disabled' : 'text.secondary'}>
                   {`${doc.pomoDone}/${doc.pomoTotal}`}
                 </Typography>
               </Box>
