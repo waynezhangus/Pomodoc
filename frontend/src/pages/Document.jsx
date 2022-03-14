@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useEditDocMutation } from '../features/api/apiSlice'
-import useInterval from "../hooks/useInterval"
-import ViewSDKClient from "../utils/ViewSDKClient"
+import useInterval from '../hooks/useInterval'
+import ViewSDKClient from '../utils/ViewSDKClient'
+import ImportDialog from '../components/ImportDialog'
+import SkipBar from '../components/SkipBar'
 
 import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack'
 
 import DocAppBar from '../components/DocAppBar'
@@ -15,11 +16,11 @@ import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
 
 export default function Document({ doc }) {
-  
   const navigate = useNavigate()
   const [editDoc, { isLoading }] = useEditDocMutation()
   
   const [drawer, setDrawer] = useState(false)
+  const [snackbar, setSnackbar] = useState(false)
   const [note, setNote] = useState(doc.note)
   const [pomo, setPomo] = useState({
     timerRun: false,
@@ -29,14 +30,10 @@ export default function Document({ doc }) {
     focusDuration: doc.focusDuration,
     breakDuration: doc.breakDuration,
   })
+  const toggleSnackbar = (next) => setSnackbar(next)
+  const toggleDrawer = () => setDrawer(prev => !prev)
 
-  function toggleDrawer() {
-    setDrawer(prev => !prev);
-  }
-
-  function onInput(e) {
-    setNote(e.target.value)
-  }
+  const onInput = (e) => setNote(e.target.value)
 
   const onClose = async () => {
     try {
@@ -51,15 +48,14 @@ export default function Document({ doc }) {
     }
   }
 
-  function playPause() {
+  const playPause = () => {
     setPomo(prev => ({
       ...prev,
       timerRun: !prev.timerRun,
     }))
   }
-
-  function stopHandle () {
-    setPomo((prev) => ({
+  const stopHandle = () => {
+    setPomo(prev => ({
       ...prev,
       timerRun: false,
       session: 'Focus',
@@ -70,33 +66,29 @@ export default function Document({ doc }) {
   useInterval(() => {
     if (pomo.timeRemaining === 0) {
       new Audio("https://bigsoundbank.com/UPLOAD/mp3/1482.mp3").play()
-      return setPomo((prev) => {
-        if (prev.session === 'Focus') {
-          return {
-            ...prev,
-            session: 'Break',
-            timeRemaining: prev.breakDuration * 60,
-            pomoLeft: prev.pomoLeft--,
-          }
-        } else {
-          return {
-            ...prev,
-            session: 'Focus',
-            timeRemaining: prev.focusDuration * 60,
-          }
-        }
-      })
-    } else {
-      return setPomo((prev) => {
-        const timeRemaining = Math.max(0, prev.timeRemaining - 1)
-        return {
+      if (pomo.session === 'Focus') {
+        toggleSnackbar(true)
+        setPomo(prev => ({
           ...prev,
-          timeRemaining
-        }
+          session: 'Break',
+          timeRemaining: pomo.breakDuration * 60,
+          pomoLeft: prev.pomoLeft-1,
+        }))
+      } else {
+        setPomo(prev => ({
+          ...prev,
+          session: 'Focus',
+          timeRemaining: pomo.focusDuration * 60,
+        }))
+      }
+    } else {
+      setPomo(prev => {
+        const timeRemaining = Math.max(0, prev.timeRemaining - 1)
+        return { ...prev, timeRemaining }
       })
     }
   },
-    pomo.timerRun ? 100 : null
+    pomo.timerRun ? 20 : null
   )
 
   useEffect(() => {
@@ -165,7 +157,14 @@ export default function Document({ doc }) {
             variant="filled"
           />
         </Stack>
-      </Box>    
+      </Box> 
+      <ImportDialog initNote={doc.note} findings={doc.findings} setNote={setNote} /> 
+      <SkipBar 
+        open={snackbar} 
+        toggle={toggleSnackbar} 
+        setPomo={setPomo} 
+        time={doc.focusDuration * 60}
+      />  
     </Box>
   );
 }
