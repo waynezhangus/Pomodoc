@@ -4,20 +4,25 @@ const userSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please add a name'],
+      required: true,
       trim: true
     },
     email: {
       type: String,
-      required: [true, 'Please add an email'],
+      required: true,
       unique: true,
     },
     password: {
       type: String,
-      required: [true, 'Please add a password'],
+      required: true,
     },
-    workSpeed: {
+    focusDuration: {
       type: Number,
+      default: 25
+    },
+    breakDuration: {
+      type: Number,
+      default: 5
     },
     docDone: {
       type: Number,
@@ -26,6 +31,22 @@ const userSchema = mongoose.Schema(
     readingSpeed: {
       type: Number,
       default: 2
+    },
+    isDark: {
+      type: Boolean,
+      default: false
+    },
+    pdfAnno: {
+      type: Boolean,
+      default: true
+    },
+    pdfPanel: {
+      type: Boolean,
+      default: true
+    },
+    pdfPage: {
+      type: Boolean,
+      default: true
     },
     isAdmin: {
       type: Boolean,

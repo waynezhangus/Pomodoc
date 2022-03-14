@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardActionArea from '@mui/material/CardActionArea'
 import CardContent from '@mui/material/CardContent'
-import CircularProgress from '@mui/material/CircularProgress'
+import Skeleton from '@mui/material/Skeleton';
 
 import AddIcon from '@mui/icons-material/Add'
 
@@ -54,9 +54,22 @@ export default function Documents() {
     </Grid>
   )
 
+  const loadPattern = (
+    <Grid item xs={12} sm={6} md={4}>
+      <Card sx={{ height: 180 }}>
+        <CardContent>
+          <Skeleton variant='h5' width='100%' />
+          <Skeleton variant='caption' width='50%' sx={{ mt: 1 }} />
+          <Skeleton variant='caption' width='100%' sx={{ mt: 1 }} />
+          <Skeleton variant='rectangular' width='100%' sx={{ mt: 3, height: 50 }} />
+        </CardContent>
+      </Card>
+    </Grid>
+  )
+
   let content
   if (isLoading) {
-    content = <CircularProgress />
+    content = loadPattern
   } else if (isSuccess) {
     content = sortedDocs.map((doc) => (
       <DocExcerpt key={doc._id} doc={doc} onEdit={onEdit} />

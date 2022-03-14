@@ -33,14 +33,6 @@ const docSchema = mongoose.Schema(
       type: Number,
       default: 0
     },
-    focusDuration: {
-      type: Number,
-      default: 25
-    },
-    breakDuration: {
-      type: Number,
-      default: 5
-    },
     status: {
       type: String,
       enum: ['ongoing', 'done'],

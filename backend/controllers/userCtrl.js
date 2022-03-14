@@ -29,11 +29,14 @@ const registerUser = asyncHandler(async (req, res) => {
     password: hashedPassword,
   })
   if (user) {
+    const {
+      _id, name, email, focusDuration, breakDuration, readingSpeed,
+      isDark, pdfAnno, pdfPanel, pdfPage,
+    } = user
     res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
+      _id, name, email, focusDuration, breakDuration, readingSpeed,
+      isDark, pdfAnno, pdfPanel, pdfPage,
+      token: generateToken(_id),
     })
   } else {
     res.status(400)
@@ -50,11 +53,14 @@ const loginUser = asyncHandler(async (req, res) => {
   //Validation
   const user = await User.findOne({ email })
   if (user && (await bcrypt.compare(password, user.password))) {
+    const {
+      _id, name, email, focusDuration, breakDuration, readingSpeed,
+      isDark, pdfAnno, pdfPanel, pdfPage,
+    } = user
     res.status(200).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
+      _id, name, email, focusDuration, breakDuration, readingSpeed,
+      isDark, pdfAnno, pdfPanel, pdfPage,
+      token: generateToken(_id),
     })
   } else {
     res.status(401)

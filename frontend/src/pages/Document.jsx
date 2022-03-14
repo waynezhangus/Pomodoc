@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { useEditDocMutation } from '../features/api/apiSlice'
 import useInterval from '../hooks/useInterval'
 import ViewSDKClient from '../utils/ViewSDKClient'
@@ -23,6 +24,7 @@ const maxWidth = 3000
 export default function Document({ doc }) {
   const navigate = useNavigate()
   const [editDoc, { isLoading }] = useEditDocMutation()
+  const { user } = useSelector((state) => state.auth)
   
   const [drawer, setDrawer] = useState(false)
   const [snackbar, setSnackbar] = useState(false)
@@ -31,10 +33,10 @@ export default function Document({ doc }) {
   const [pomo, setPomo] = useState({
     timerRun: false,
     session: 'Focus',
-    timeRemaining: doc.focusDuration * 60,
+    timeRemaining: user.focusDuration * 60,
     pomoLeft: (doc.pomoTotal-doc.pomoDone),
-    focusDuration: doc.focusDuration,
-    breakDuration: doc.breakDuration,
+    focusDuration: user.focusDuration,
+    breakDuration: user.breakDuration,
   })
   const toggleSnackbar = (next) => setSnackbar(next)
   const toggleDrawer = () => setDrawer(prev => !prev)
@@ -119,9 +121,9 @@ export default function Document({ doc }) {
         "pdf-div",
         {
           defaultViewMode: "FIT_WIDTH",
-          showAnnotationTools: true,
-          showLeftHandPanel: true,
-          showPageControls: true,
+          showAnnotationTools: user.pdfAnno,
+          showLeftHandPanel: user.pdfPanel,
+          showPageControls: user.pdfPage,
           showDownloadPDF: true,
           showPrintPDF: true,
         },

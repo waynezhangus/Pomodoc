@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography'
 
 import AppBar from '@mui/material/AppBar'
 import Avatar from '@mui/material/Avatar'
-//import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -105,14 +104,28 @@ export default function Header() {
     </>
   )
 
+  const timeNow = (new Date()).getHours()
+  const timeString = (timeNow < 6) ? 'night' 
+                        : (timeNow < 12) ? 'morning'
+                        : (timeNow < 18) ? 'afternoon'
+                        : 'evening'
+
   const userMenu = (
-    <Box sx={{ flexGrow: 0 }}>
+    <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+      <Typography
+        sx={{ flexGrow: 1 }}
+        variant="subtitle2"       
+        component="div"
+        noWrap        
+      >
+        {user ? (`Good ${timeString}, ${user.name}.`) : 'Welcome! Please log in.'}
+      </Typography>
       <Tooltip title="Open settings">
         <IconButton 
-          sx={{ p: 0 }} 
+          sx={{ p: 0, ml: 2 }} 
           onClick={(e) => {setAnchorElUser(e.currentTarget)}}
         >
-          <Avatar alt="Avatar" src="../../public/avatar.jpg" />
+          <Avatar alt="Avatar" src={`https://api.multiavatar.com/${user?._id ?? ''}.png`} />
         </IconButton>
       </Tooltip>
       <Menu

@@ -37,7 +37,7 @@ export default function ImportDialog({ initNote, findings, setNote }) {
       <DialogTitle>{'Import our summary for the PDF?'}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          It seems like your note is still empty. After looking through this file,
+          It seems like your note is empty. After looking through this file,
           we made a short summary for you to get started.
         </DialogContentText>
       </DialogContent>
