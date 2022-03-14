@@ -11,7 +11,18 @@ import PrivateRoute from './components/PrivateRoute'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 
-const theme = createTheme()
+const theme = createTheme({
+  components: {
+    MuiDivider: {
+      variants: [
+        {
+          props: { variant: 'resize' },
+          style: { cursor: 'col-resize' },
+        },
+      ]
+    }
+  }
+})
 
 function App() {
   return (

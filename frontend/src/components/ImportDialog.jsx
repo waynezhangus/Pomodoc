@@ -19,7 +19,6 @@ export default function ImportDialog({ initNote, findings, setNote }) {
   useEffect(() => {
     if (!initNote) {
       toggleOpen()
-      console.log('toggle')
     }
   }, [])
 

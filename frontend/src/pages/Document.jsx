@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useEditDocMutation } from '../features/api/apiSlice'
 import useInterval from '../hooks/useInterval'
@@ -9,11 +9,16 @@ import SkipBar from '../components/SkipBar'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 
+import Divider from '@mui/material/Divider'
 import DocAppBar from '../components/DocAppBar'
 import DocDrawer from '../components/DocDrawer'
 import DocProgress from '../components/DocProgress'
 import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
+
+const defaultWidth = 2200
+const minWidth = 1400
+const maxWidth = 3000
 
 export default function Document({ doc }) {
   const navigate = useNavigate()
@@ -21,6 +26,7 @@ export default function Document({ doc }) {
   
   const [drawer, setDrawer] = useState(false)
   const [snackbar, setSnackbar] = useState(false)
+  const [width, setWidth] = useState(defaultWidth)
   const [note, setNote] = useState(doc.note)
   const [pomo, setPomo] = useState({
     timerRun: false,
@@ -33,7 +39,22 @@ export default function Document({ doc }) {
   const toggleSnackbar = (next) => setSnackbar(next)
   const toggleDrawer = () => setDrawer(prev => !prev)
 
-  const onInput = (e) => setNote(e.target.value)
+  const handleMouseDown = e => {
+    console.log(e.clientX - document.body.offsetLeft)
+    document.addEventListener("mouseup", handleMouseUp, true);
+    document.addEventListener("mousemove", handleMouseMove, true);
+  };
+  const handleMouseUp = () => {
+    document.removeEventListener("mouseup", handleMouseUp, true);
+    document.removeEventListener("mousemove", handleMouseMove, true);
+  };
+  const handleMouseMove = useCallback(e => {
+    const dw = (e.clientX - document.body.offsetLeft)
+    const newWidth = 0.0105*dw*dw - 12.929*dw + 5114
+    if (newWidth > minWidth && newWidth < maxWidth) {
+      setWidth(newWidth);
+    }
+  }, []);
 
   const onClose = async () => {
     try {
@@ -142,14 +163,15 @@ export default function Document({ doc }) {
         <Toolbar />
         <DocProgress pomo={pomo} />
         <Stack direction="row" spacing={2} sx={{ my: 2, pr: 1 }}>     
-          <div id="pdf-div" />
+          <div id="pdf-div" style={{ width }} />
+          <Divider orientation="vertical" flexItem variant='resize' onMouseDown={e => handleMouseDown(e)}/>
           <TextField
-            sx={{width: 800}}
+            fullWidth
             id="filled-textarea"
             label={doc.title}
             name="note"
             value={note}
-            onChange={onInput}
+            onChange={(e) => setNote(e.target.value)}
             placeholder="Your note"
             multiline
             minRows={27} 
