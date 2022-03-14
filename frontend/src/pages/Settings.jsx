@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { update, reset } from '../features/auth/authSlice'
 
@@ -19,6 +20,7 @@ import TextField from '@mui/material/TextField'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 export default function Settings() {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { 
     name, email, token,
@@ -52,6 +54,7 @@ export default function Settings() {
 
   const onSave = () => {
     dispatch(update(config))
+    navigate('/')
   }
 
   useEffect(() => {
@@ -115,7 +118,7 @@ export default function Settings() {
                 onChange={onInput}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ pb: 1 }}>
               <TextField
                 label="Break Duration"
                 size="small"
@@ -126,7 +129,7 @@ export default function Settings() {
                 onChange={onInput}
               />
             </Grid>
-            <Grid item xs={12} sx={{ pb: 1 }}>
+            {/* <Grid item xs={12} sx={{ pb: 1 }}>
               <TextField
                 label="Reading Speed"
                 size="small"
@@ -136,7 +139,7 @@ export default function Settings() {
                 value={config.readingSpeed}
                 onChange={onInput}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </AccordionDetails>
       </Accordion>
