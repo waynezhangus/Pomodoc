@@ -82,7 +82,7 @@ export default function Document({ doc }) {
       ...prev,
       timerRun: false,
       session: 'Focus',
-      timeRemaining: doc.focusDuration * 60,
+      timeRemaining: pomo.focusDuration * 60,
     }))
   }
 
@@ -187,7 +187,7 @@ export default function Document({ doc }) {
         open={snackbar} 
         toggle={toggleSnackbar} 
         setPomo={setPomo} 
-        time={doc.focusDuration * 60}
+        time={pomo.focusDuration * 60}
       />  
     </Box>
   );
