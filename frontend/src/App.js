@@ -6,6 +6,7 @@ import Register from './pages/Register'
 import Documents from './pages/Documents'
 import Pomodoro from './pages/Pomodoro'
 import DocShell from './pages/DocShell'
+import Settings from './pages/Settings'
 import PrivateRoute from './components/PrivateRoute'
 
 import { createTheme, ThemeProvider } from '@mui/material/styles'
@@ -36,6 +37,7 @@ function App() {
           <Route path='/' element={<Home />}>
             <Route path='/projects' element={<Documents />} />
             <Route path='/pomodoro' element={<Pomodoro />} />
+            <Route path='/settings' element={<Settings />} />
           </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />

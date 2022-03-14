@@ -139,16 +139,16 @@ export default function Header() {
         onClose={onCloseUserMenu}
       >
         {user
-          ? [
-              <MenuItem onClick={onCloseUserMenu} key='Profile'>
-                <Typography textAlign="center">Profile</Typography>
-              </MenuItem>,
+          ? [ 
               <MenuItem onClick={onLogout} key='Logout'>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>,
+              <MenuItem onClick={onCloseUserMenu} key='Profile' component={Link} to='/settings'>
+                <Typography textAlign="center">Settings</Typography>
+              </MenuItem>,
               <MenuItem onClick={onCloseUserMenu} key='Help'>
                 <Typography textAlign="center">Help</Typography>
-              </MenuItem>
+              </MenuItem>,
           ]
           : [
             <MenuItem onClick={onCloseUserMenu} key='Login' component={Link} to='/login'>
