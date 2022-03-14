@@ -25,7 +25,7 @@ const userSchema = mongoose.Schema(
     },
     readingSpeed: {
       type: Number,
-      default: 2
+      default: 0
     },
     isAdmin: {
       type: Boolean,

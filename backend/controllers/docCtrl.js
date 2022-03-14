@@ -27,8 +27,9 @@ const createDoc = asyncHandler( async (req, res) => {
 
 
   const title = !req.body.title && findingData.data.metadata.title
+  const readingSpeed = req.user.readingSpeed ? req.user.readingSpeed : 2
   const pageCount = findingData.data.metadata.pages
-  const pomoTotal = Math.max( Math.ceil( pageCount / req.user.readingSpeed ), 1)
+  const pomoTotal = Math.max( Math.ceil( pageCount / readingSpeed ), 1)
   const findings = findingData.data.findings
   const referenceLinks = referenceData.data.reference_links
 
