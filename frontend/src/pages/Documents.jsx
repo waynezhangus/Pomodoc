@@ -3,6 +3,7 @@ import { useGetDocsQuery } from '../features/api/apiSlice'
 import CreateDoc from '../components/CreateDoc'
 import EditDoc from '../components/EditDoc'
 import DocExcerpt from '../components/DocExcerpt'
+import Calendar from '../components/Calendar';
 
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
@@ -84,6 +85,7 @@ export default function Documents() {
         {createCard}
         {content}
       </Grid>
+      <Calendar docs={docs}/>
       <CreateDoc open={create} onClose={toggleCreate}/>
       { edit && (<EditDoc open={edit} onClose={toggleEdit} editData={editData}/>) }
     </Container>
