@@ -8,7 +8,7 @@ const router = express.Router()
 router.post('/', userCtrl.registerUser)
 // Login User
 router.post('/login', userCtrl.loginUser)
-// Get current user
-router.get('/me', protect, userCtrl.getMe)
+// Update user
+router.patch('/update', protect, userCtrl.updateUser)
 
 module.exports = router

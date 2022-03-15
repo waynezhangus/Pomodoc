@@ -67,17 +67,16 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error('Invalid credentials')
   }
 })
-
-// @desc    Get current user
-// @route   GET /api/users/me
+// @desc    Update a user
+// @route   POST /api/users/update
 // @access  Private
-const getMe = asyncHandler(async (req, res) => {
-  const user = {
-    id: req.user.id,
-    email: req.user.email,
-    name: req.user.name,
-  }
-  res.status(200).json(user)
+const updateUser = asyncHandler(async (req, res) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    req.body,
+    { new: true }
+  )
+  res.status(200).json(updatedUser)
 })
 
 // Generate token
@@ -90,7 +89,7 @@ const generateToken = (id) => {
 const userCtrl = {
   registerUser,
   loginUser,
-  getMe,
+  updateUser,
 }
 
 module.exports = userCtrl

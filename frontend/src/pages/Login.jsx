@@ -32,8 +32,6 @@ export default function Login() {
   useEffect(() => {
     if (status === 'failed') {
       
-    } else if (status === 'loading') {
-
     } else if (status === 'succeeded' || user) {
       navigate('/')
     }
@@ -78,7 +76,6 @@ export default function Login() {
             margin="normal"
             required
             fullWidth
-            id="email"
             label="Email Address"
             type="email"
             name="email"
@@ -91,7 +88,6 @@ export default function Login() {
             margin="normal"
             required
             fullWidth
-            id="password"
             label="Password"
             type="password"
             name="password"

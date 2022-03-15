@@ -15,20 +15,32 @@ const getDocs = asyncHandler( async (req, res) => {
 // @access  Private
 const createDoc = asyncHandler( async (req, res) => {
   const {dueDate, pdfLink} = req.body; 
-  
-  const findingData = await axios.get(
-    'http://api.scholarcy.com/api/findings/extract', 
-    { params: {url: pdfLink} }
-  )
-  const referenceData = await axios.get(
-    'http://ref.scholarcy.com/api/references/extract', 
-    { params: {url: pdfLink} }
-  )
+  const { readingSpeed } = await User.findById(req.user.id)
 
-  const title = (req.body.title ? req.body.title : (findingData.data.metadata.title ?? 'Title not found'))
-                  
+  let findingData, referenceData
+
+  if (pdfLink) {
+    try {
+      findingData = await axios.get(
+        'http://api.scholarcy.com/api/findings/extract', 
+        { params: {url: pdfLink} }
+      )
+      referenceData = await axios.get(
+        'http://ref.scholarcy.com/api/references/extract', 
+        { params: {url: pdfLink} }
+      )
+    } catch (error) {
+      console.log(error)
+      res.status(500)
+      throw new Error('PDF Parsing failed')
+    }
+  }
+
+  const title = req.body.title ? req.body.title 
+                : findingData.data.metadata.title ? findingData.data.filename 
+                : 'Title not found'
   const pageCount = findingData.data.metadata.pages
-  const pomoTotal = Math.max( Math.ceil( pageCount / req.user.readingSpeed ), 1)
+  const pomoTotal = Math.max( Math.ceil( pageCount / readingSpeed ), 1)
   const findings = findingData.data.findings
   const references = referenceData.data.reference_links
 
@@ -64,6 +76,7 @@ const getDoc = asyncHandler( async (req, res) => {
 // @access  Private
 const updateDoc = asyncHandler( async (req, res) => {
   const doc = await Doc.findById(req.params.id)
+  const { readingSpeed, docDone } = await User.findById(req.user.id)
   if (!doc) {
     res.status(404)
     throw new Error('Note not found')
@@ -76,10 +89,10 @@ const updateDoc = asyncHandler( async (req, res) => {
     req.body.pomoTotal = doc.pomoDone
     if (doc.pomoDone) {
       const currentSpeed = doc.pageCount / doc.pomoDone
-      const newSpeed = (req.user.readingSpeed * req.user.docDone + currentSpeed) / (req.user.docDone + 1)
+      const newSpeed = (readingSpeed * docDone + currentSpeed) / (docDone + 1)
       await User.findByIdAndUpdate(
         req.user.id,
-        { readingSpeed: newSpeed, docDone: req.user.docDone + 1 }
+        { readingSpeed: newSpeed, docDone: docDone + 1 }
       )
     }
   }

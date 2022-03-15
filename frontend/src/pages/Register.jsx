@@ -88,7 +88,6 @@ export default function Register() {
                 required
                 fullWidth           
                 label="Name"
-                id="name"
                 name="name"
                 value={name}
                 autoComplete="name"
@@ -103,7 +102,6 @@ export default function Register() {
                 fullWidth              
                 label="Email Address"
                 type="email"
-                id="email"
                 name="email"
                 value={email}
                 autoComplete="email"
@@ -118,7 +116,6 @@ export default function Register() {
                 fullWidth            
                 label="Password"
                 type="password"
-                id="password"
                 name="password"            
                 value={password}                   
                 autoComplete="current-password"
@@ -132,7 +129,6 @@ export default function Register() {
                 fullWidth 
                 label="Confirm password"
                 type="password"
-                id="password2"
                 name="password2"
                 value={password2}                   
                 onChange={onChange}
