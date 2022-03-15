@@ -6,9 +6,9 @@ function Calendar({docs}) {
   /* 
     Update with your own Client Id and Api key 
   */
-  var CLIENT_ID = '371469659869-s6loadjd3p30sm0uree294jftqmhvg3d.apps.googleusercontent.com';
-  var SECRET = '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';
-  var API_KEY = 'AIzaSyA9BBok9gROpGFSPYQrBn-N_VU-uGXpboI';
+  var CLIENT_ID = '';
+  var SECRET = '';
+  var API_KEY = '';
   var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"]
   var SCOPES = "https://www.googleapis.com/auth/calendar.events"
 
