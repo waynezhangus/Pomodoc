@@ -1,4 +1,6 @@
-function Calendar() {
+import Button from '@mui/material/Button'
+
+function Calendar({docs}) {
 
   var gapi = window.gapi
   /* 
@@ -21,44 +23,40 @@ function Calendar() {
         scope: SCOPES,
       })
 
-    //   gapi.client.load('calendar', 'v3', () => console.log('bam!'))
-
+      const events = []
+      for(let i = 0; i < docs.length; i += 1) {
+          const event = {
+            'summary': docs[i].title, //title
+            'start': {
+              'date': docs[i].dueDate.split('T')[0], //dueDate yyyy-mm-dd
+              'timeZone': 'America/Los_Angeles'
+            },
+            'end': {
+              'date': docs[i].dueDate.split('T')[0], //dueDate yyyy-mm-dd
+              'timeZone': 'America/Los_Angeles'
+            }
+          }
+          events.push(event)
+      }
       gapi.auth2.getAuthInstance().signIn()
       .then(() => {
-        
-        var event = {
-          'summary': 'Awesome Event!', //title
-          'start': {
-            'date': '2022-06-28', //dueDate yyyy-mm-dd
-            'timeZone': 'America/Los_Angeles'
-          },
-          'end': {
-            'date': '2022-06-28', //dueDate yyyy-mm-dd
-            'timeZone': 'America/Los_Angeles'
-          }
-        }
+        const batch = gapi.client.newBatch();
+        events.map((r, j) => {
+            batch.add(gapi.client.calendar.events.insert({
+              'calendarId': 'primary',
+              'resource': events[j]
+            }))
+          })
 
-        var request = gapi.client.calendar.events.insert({
-          'calendarId': 'primary',
-          'resource': event,
-        })
-
-        // request.execute(event => {
-        //   console.log(event)
-        //   window.open(event.htmlLink)
-        // })
-        request.execute()
-        
-
+        batch.then(function(){
+        console.log('all jobs now dynamically done!!!')
+        });
       })
     })
   }
 
   return (
-    <div>
-        <p>Click to add event to Google Calendar</p>
-        <button style={{width: 100, height: 50}} onClick={handleClick}>Add Event</button>
-    </div>
+    <Button sx={{ mt:4, ml:38.5 }} onClick={handleClick} variant='contained'>Add to Google Calendar</Button>
   );
 }
 
